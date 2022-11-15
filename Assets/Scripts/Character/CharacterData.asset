@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 50
   normalColliderHeight: 0.7
-  jumpForce: 0.3
-  collisionOverlapRadius: 0.35
+  jumpForce: 0.05
+  collisionOverlapRadius: 0.45

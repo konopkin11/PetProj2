@@ -29,7 +29,7 @@ namespace Character.States
 
         void Jump()
         {
-            //Character.transform.Translate(Vector3.up * (Character.CollisionOverlapRadius * 1.01f));
+            //Character.transform.Translate(Vector3.up * (Character.CollisionOverlapRadius));
             Character.ApplyImpulse(Character.JumpForce *Vector2.up);
         }
     }

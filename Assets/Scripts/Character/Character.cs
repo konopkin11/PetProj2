@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Character
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class Character : MonoBehaviour
     {
         #region StateMachingMoving
@@ -14,6 +15,7 @@ namespace Character
         public StateJumpin StateJumping;
         #endregion
 
+        private Rigidbody2D _rb;
         [SerializeField]
         private CharacterData _data;
         public float JumpForce => _data.jumpForce;
@@ -23,6 +25,7 @@ namespace Character
         
         void Start()
         {
+            _rb = GetComponent<Rigidbody2D>();
             StateMachine = new StateMachine();
             StateStanding = new StateStanding(this, StateMachine);
             StateJumping = new StateJumpin(this, StateMachine);
@@ -32,13 +35,13 @@ namespace Character
 
         public void Move(float speed)
         {
-            Vector2 targetVelocity = new Vector2(speed * MovementSpeed * Time.deltaTime, 0);
+            Vector2 targetVelocity = new Vector2(speed * MovementSpeed * Time.deltaTime, _rb.velocity.y);
             GetComponent<Rigidbody2D>().velocity = targetVelocity;
         }
         public bool CheckCollisionOverlap(Vector2 point)
         {
-            
-            return Physics2D.OverlapCircleAll(point, CollisionOverlapRadius, whatIsFloor).Length>0;
+            return Physics2D.Raycast(transform.position, Vector2.down, CollisionOverlapRadius, whatIsFloor);
+            //return Physics2D.OverlapCircleAll(point, CollisionOverlapRadius, whatIsFloor).Length>0;
         }
         
         
@@ -46,7 +49,7 @@ namespace Character
 
         public void ApplyImpulse(Vector2 force)
         {
-            GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+            _rb.AddForce(force, ForceMode2D.Impulse);
 
         }
         void Update()
