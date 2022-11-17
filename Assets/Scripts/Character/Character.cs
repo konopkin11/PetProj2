@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Character.States;
+using UnityEditor.Events;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Character
 {
@@ -22,21 +25,22 @@ namespace Character
         public float MovementSpeed => _data.movementSpeed;
         public float CollisionOverlapRadius => _data.collisionOverlapRadius;
         [SerializeField] private LayerMask whatIsFloor;
-        
-        void Start()
+
+      
+        void Awake()
         {
+            GameController.MapRerender+= OnMapRerender;
             _rb = GetComponent<Rigidbody2D>();
             StateMachine = new StateMachine();
             StateStanding = new StateStanding(this, StateMachine);
             StateJumping = new StateJumpin(this, StateMachine);
             StateMachine.Initialize(StateStanding);
-
         }
 
         public void Move(float speed)
         {
             Vector2 targetVelocity = new Vector2(speed * MovementSpeed * Time.deltaTime, _rb.velocity.y);
-            GetComponent<Rigidbody2D>().velocity = targetVelocity;
+            _rb.velocity = targetVelocity;
         }
         public bool CheckCollisionOverlap(Vector2 point)
         {
@@ -44,14 +48,13 @@ namespace Character
             //return Physics2D.OverlapCircleAll(point, CollisionOverlapRadius, whatIsFloor).Length>0;
         }
         
-        
-        
-
         public void ApplyImpulse(Vector2 force)
         {
             _rb.AddForce(force, ForceMode2D.Impulse);
 
         }
+
+        
         void Update()
         {
             StateMachine.CurrentState.HandleInput();
@@ -61,6 +64,11 @@ namespace Character
         private void FixedUpdate()
         {
             StateMachine.CurrentState.PhysicsUpdate();
+        }
+        
+        private void OnMapRerender(List<List<int>> map)
+        {
+            transform.position = new Vector2(transform.position.x, map[0].Count);
         }
     }
 }
