@@ -10,7 +10,7 @@ namespace Map
 {
     public class MapGenerator : MonoBehaviour
     {
-        private static List<List<int>> _map;
+        public static List<List<int>> _map;
         [SerializeField] public static MapData md;
         public static List<List<int>> GenerateMap(Tilemap tilemap)
         {
@@ -125,7 +125,7 @@ namespace Map
                         break;
                 }
                 sectionWidth++;
-                if(lastHeight >=0 && lastHeight < map.Count) map[x][lastHeight] = 2; // top tile to paint different tilebase
+                if(lastHeight >=0 && lastHeight < map[0].Count) map[x][lastHeight] = 2; // top tile to paint different tilebase
                 for (int y = lastHeight-1; y >= 0; y--)
                 {
                     map[x][y] = 1;

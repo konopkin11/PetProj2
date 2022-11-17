@@ -68,7 +68,8 @@ namespace Character
         
         private void OnMapRerender(List<List<int>> map)
         {
-            transform.position = new Vector2(transform.position.x, map[0].Count);
+            int maxHeight = map[0].FindLast(delegate(int i) { return i == 1; });
+            transform.position = new Vector2(0, maxHeight/0.64f);
         }
     }
 }
